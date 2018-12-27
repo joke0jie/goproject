@@ -1,0 +1,11 @@
+/autoconfig
+/beans
+/env
+/configprops
+/dump
+/health
+/info
+/mappings
+/metrics
+/shutdown
+/trace
