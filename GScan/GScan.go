@@ -86,16 +86,22 @@ func main() {
 
 	target := flag.String("target", "127.0.0.1", "target IP")
 	threadNum := flag.Int("thread", 10, "thread num  __note__ port scan port default 15")
-	fg := flag.String("flag", "null", "web = web dir scan \nport = web C port scan 80/443/8080 [format 224.221.224]\n")
+	fg := flag.String("flag", "null", `web = web dir scan
+	useage: ./GScan --flag web --target 127.0.0.1 --thread 20
+port = web C port scan 80/443/8080 [format 224.221.224]
+	usage: ./GScan --flag port --target 114.114.114
+ISC = IIS short name scan. 
+	usage: ./GScan --target http://127.0.0.1/`)
+
 	flag.Parse()
 	//fmt.Println("[+] start ...")
-	fmt.Println("[+] cpu:", runtime.NumCPU())
+	fmt.Println("[*] cpu:", runtime.NumCPU())
 	switch *fg {
 	case "web":
 		{
-			fmt.Printf("[+] target : %s  thread : %d\n", *target, *threadNum)
-			fmt.Println("[+] web dir scan start...")
-			fmt.Println("[+] payload number : ", payloadNum)
+			fmt.Printf("[*] target : %s  thread : %d\n", *target, *threadNum)
+			fmt.Println("[*] web dir scan start...")
+			fmt.Println("[*] payload number : ", payloadNum)
 			wg.Add(*threadNum)
 			for i := 0; i < *threadNum; i++ {
 
@@ -104,28 +110,24 @@ func main() {
 		}
 	case "port":
 		{
-			fmt.Printf("[+] target : %s  thread : 15 (default)\n", *target)
-			//			wg.Add(5)
-			//			fmt.Println("[+] port scan start...")
-			//			for i := 0; i < 5; i++ {
-			//				go CportScan(*target, i*51, 50)
-			//				//CportScan(*target, 0, 255)
-			//			}
-
+			fmt.Printf("[*] target : %s  thread : 15 (default)\n", *target)
 			wg.Add(15)
-			fmt.Println("[+] port scan start...")
+			fmt.Println("[*] port scan start...")
 			for i := 0; i < 15; i++ {
 				go CportScan(*target, i*17, 16)
-				//CportScan(*target, 0, 255)
 			}
+		}
+	case "ISC":
+		{
+			IISShortscan(*target)
 		}
 	}
 
 	wg.Wait()
 	elapsed := time.Since(t)
 
-	fmt.Println("[+] time:", elapsed)
-	fmt.Println("[+] done ...")
+	fmt.Println("[*] time:", elapsed)
+	fmt.Println("[*] done ...")
 }
 
 func CportScan(target string, start int, count int) {
@@ -165,7 +167,7 @@ func CportScan(target string, start int, count int) {
 					title = text[1]
 				}
 				//fmt.Printf("Title:%s       \n", title)
-				fmt.Printf("%s\t80\t\t%-20s\t\t\t\t\t%-10s\n", IP, Server, title)
+				fmt.Printf("[+] %s\t80\t\t%-20s\t\t\t\t\t%-10s\n", IP, Server, title)
 
 			}
 
@@ -194,7 +196,7 @@ func CportScan(target string, start int, count int) {
 					title = text[1]
 				}
 				//fmt.Printf("Title:%s       \n", title)
-				fmt.Printf("%s\t443\t\t%-20s\t\t\t\t\t%-10s\n", IP, Server, title)
+				fmt.Printf("[+] %s\t443\t\t%-20s\t\t\t\t\t%-10s\n", IP, Server, title)
 			}
 		}
 
@@ -220,7 +222,7 @@ func CportScan(target string, start int, count int) {
 					title = text[1]
 				}
 				//fmt.Printf("Title:%s       \n", title)
-				fmt.Printf("%s\t8080\t\t%-40s\t\t%-10s\n", IP, Server, title)
+				fmt.Printf("[+] %s\t8080\t\t%-40s\t\t%-10s\n", IP, Server, title)
 			}
 		}
 	}
