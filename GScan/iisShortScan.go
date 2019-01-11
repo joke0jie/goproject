@@ -26,13 +26,18 @@ func IISShortscan(target string) {
 
 	//设置请求
 	client := &http.Client{Transport: tr, Timeout: timeout}
-	client.Get("http://127.0.0.1")
-
-	cha := "qwertyuiopasdfghjklzxcvbnm1234567890"
-	for k, v := range cha {
-
-		fmt.Printf("%d - %c\n", k, v)
+	resp, err := client.Get("https://z-gelen.com/index.php")
+	if err == nil {
+		if resp.StatusCode == 200 {
+			fmt.Println("z-gelen.com")
+		}
 	}
 
-	fmt.Println()
+	//	cha := "qwertyuiopasdfghjklzxcvbnm1234567890"
+	//for k, v := range cha {
+
+	//fmt.Printf("%d - %c\n", k, v)
+	//	}
+
+	//	fmt.Println()
 }
